@@ -1,0 +1,18 @@
+{{>layouts/header}}
+
+<h1>게시물 목록</h1>
+
+<div class="articles-container">
+    {{#articles}}
+        <a href="/articles/{{id}}" class="article-card">
+            <h2>{{title}}</h2>
+            <p>{{content}}</p>
+        </a>
+    {{/articles}}
+
+    {{^articles}}
+        <p>게시물이 없습니다.</p>
+    {{/articles}}
+</div>
+<a href="/articles/new">게시물 생성하기</a>
+{{>layouts/footer}}
