@@ -15,6 +15,13 @@ public class ArticleForm {
     private String content;
 
 
+    public ArticleForm(Article article) {
+        this.id = article.getId();
+        this.title = article.getTitle();
+        this.content = article.getContent();
+    }
+
+
     @Override
     public String toString() {
         return "ArticleForm{" +

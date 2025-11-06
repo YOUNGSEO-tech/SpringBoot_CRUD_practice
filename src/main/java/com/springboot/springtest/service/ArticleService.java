@@ -43,14 +43,30 @@ public class ArticleService {
        );
     }
 
-    // 게시물 수정
-    public Article edit(Long id, ArticleForm form){
-        Article article = articleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("게시물 없음 " + id));
-        article.setTitle(form.getTitle());
-        article.setContent(form.getContent());
-        articleRepository.save(article);
-        return article;
+//    // 게시물 수정
+//    public Article edit(Long id, ArticleForm form){
+//        Article article = articleRepository.findById(id)
+//                .orElseThrow(() -> new EntityNotFoundException("게시물 없음 " + id));
+//        article.setTitle(form.getTitle());
+//        article.setContent(form.getContent());
+//        articleRepository.save(article);
+//        return article;
+//    }
+
+    public ArticleForm updateArticle(ArticleForm form) {
+        Article article = new Article(form);
+        article = articleRepository.save(article);
+        return new ArticleForm(article);
+    }
+
+    public boolean delete(Long id) {
+        Article target = articleRepository.findById(id).orElse(null);
+        if (target != null) {
+            articleRepository.delete(target);
+            return true;
+        }
+
+        return false;
     }
 
 }

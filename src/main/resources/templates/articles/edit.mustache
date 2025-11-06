@@ -1,19 +1,53 @@
 {{>layouts/header}}
 
-<form class="container" action="/articles/{{article.id}}" method="post">
- <input type="hidden" name="_method" value="patch">
-
+<form class="container">
+    <input type="hidden" id="id" name="id" value="{{article.id}}">
     <div class="mb-3">
         <label class="form-label">제목</label>
-        <textarea class="form-control" rows="3" name="content">{{article.content}}</textarea>
+        <input type="text" class="form-control" id="title"
+               value="{{article.title}}">
     </div>
-
     <div class="mb-3">
         <label class="form-label">내용</label>
-        <textarea class="form-control" rows="3" name="content">{{article.content}}</textarea>
+        <textarea class="form-control" rows="3" id="content">{{article.content}}</textarea>
     </div>
-
-    <button type="submit" class="btn btn-primary">수정하기</button>
+    <button id="submit" type="submit" class="btn btn-primary">Submit</button>
     <a href="/articles/{{article.id}}">Back</a>
+
 </form>
+
 {{>layouts/footer}}
+
+<script>
+    (function () {
+        const form = document.querySelector('#submit');
+
+        form.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const payload = {
+                id: document.getElementById('id').value,
+                title: document.getElementById('title').value,
+                content: document.getElementById('content').value
+            };
+            console.log(payload);
+            try {
+                const res = await fetch(`/articles`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(`Update failed: ${res.status} ${text}`);
+                }
+                window.location.href = `/articles/${payload.id}`;
+            } catch (err) {
+                alert(err.message);
+                console.error(err);
+            }
+        });
+    })();
+</script>

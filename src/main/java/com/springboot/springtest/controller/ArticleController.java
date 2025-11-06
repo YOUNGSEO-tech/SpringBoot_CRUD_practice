@@ -7,6 +7,7 @@ import com.springboot.springtest.repository.ArticleRepository;
 import com.springboot.springtest.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.ast.Literal;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ import java.util.List;
 @Slf4j
 public class ArticleController {
 
-    private ArticleService articleService;
+    private final ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
@@ -71,24 +72,38 @@ public class ArticleController {
         return "articles/show";
     }
 
-    //게시물 수정
-    @PatchMapping("/articles/{id}")
-    @ResponseBody
-    public Article update(@PathVariable Long id, @RequestBody ArticleForm form) {
-        Article article = articleService.edit(id, form);
-        return article;
-    }
+//    //게시물 수정
+//    @PatchMapping("/articles/{id}")
+//    @ResponseBody
+//    public Article update(@PathVariable Long id, @RequestBody ArticleForm form) {
+//        Article article = articleService.edit(id, form);
+//        return article;
+//    }
 
+
+    // 수정 페이지로 이동하는 메서드
     @GetMapping("/articles/{id}/edit")
     public String update(@PathVariable Long id , Model model) {
+        ArticleForm article = articleService.findById(id);
         model.addAttribute("article", articleService.findById(id));
         return "articles/edit";
     }
 
+    // 게시물 수정 (put)
+    @PutMapping("/articles")
+    @ResponseBody
+    public ResponseEntity<?> edit(@RequestBody ArticleForm form) {
+        ArticleForm articleEntity = articleService.updateArticle(form);
+
+        return ResponseEntity.ok(articleEntity.getId());
+    }
+
     // 게시물 삭제
-    @DeleteMapping
-    public String delete(@PathVariable Long id, Model model) {
-         return null;
+    @DeleteMapping("/articles/{id}")
+    @ResponseBody
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+         Boolean result = articleService.delete(id);
+         return ResponseEntity.ok(id);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.springboot.springtest.entity;
 
 
+import com.springboot.springtest.dto.ArticleForm;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +24,10 @@ public class Article {
     private String content;
 
 
+    public Article(ArticleForm form) {
+        this.id = form.getId();
+        this.title = form.getTitle();
+        this.content = form.getContent();
+    }
 
 }
